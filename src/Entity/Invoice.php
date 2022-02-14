@@ -9,7 +9,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['read : Invoices', 'read : Customers']],
-    itemOperations: ['get']
+    itemOperations: ['get', 'put', 'delete', 'patch'],
+    paginationClientItemsPerPage:true
+
 )]
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
