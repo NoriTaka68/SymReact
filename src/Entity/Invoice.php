@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -10,9 +12,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['read : Invoices', 'read : Customers']],
     itemOperations: ['get', 'put', 'delete', 'patch'],
-    paginationClientItemsPerPage:true
+    paginationClientItemsPerPage:true,
+    paginationMaximumItemsPerPage: 15
 
-)]
+),
+ApiFilter(SearchFilter::class, properties:['id' => 'exact', 'status' =>'partial'])
+]
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
 {
