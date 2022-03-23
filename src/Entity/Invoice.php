@@ -4,19 +4,24 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ApiResource(
     normalizationContext: ['groups' => ['read : Invoices', 'read : Customers']],
     itemOperations: ['get', 'put', 'delete', 'patch'],
     paginationClientItemsPerPage:true,
-    paginationMaximumItemsPerPage: 15
+    paginationMaximumItemsPerPage: 30,
+    attributes: ["pagination_enabled" => true, "pagination_items_per_page" => 20]
 
 ),
-ApiFilter(SearchFilter::class, properties:['id' => 'exact', 'status' =>'partial'])
+ApiFilter(SearchFilter::class, properties:['id' => 'exact', 'status' =>'partial']),
+ApiFilter(OrderFilter::class, properties: ['amount', 'setSentAt'])
 ]
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
